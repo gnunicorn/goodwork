@@ -4,7 +4,9 @@ LABEL Description="This image is used to setup Goodwork application"
 
 RUN echo "cgi.fix_pathinfo=0;" > /usr/local/etc/php-fpm.d/php.ini
 
+# install
 RUN apt-get update && apt-get -y install libpng-dev zip unzip git && docker-php-ext-install pdo_mysql gd
+RUN docker-php-ext-install pdo_mysql bcmath
 
 # Set git to use http instead ssh
 RUN git config --global url."https://github.com/".insteadOf git@github.com:
@@ -18,3 +20,6 @@ COPY . /var/www
 
 # Set the WORKDIR to /var/www/goodwork so all following commands run in /var/www/goodwork
 WORKDIR /var/www
+
+# install dependencies
+RUN composer install --optimize-autoloader --no-dev
